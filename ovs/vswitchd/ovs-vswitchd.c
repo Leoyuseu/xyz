@@ -75,10 +75,10 @@ main(int argc, char *argv[])
     struct ovs_vswitchd_exit_args exit_args = {&exiting, &cleanup};
     int retval;
 
-    set_program_name(argv[0]);
+    set_program_name(argv[0]);  //设置程序名称、版本、编译日期等信息
 
     ovs_cmdl_proctitle_init(argc, argv);
-    service_start(&argc, &argv);
+    service_start(&argc, &argv);   //注册回调和服务管理器出现故障错误时操作的配置
     remote = parse_options(argc, argv, &unixctl_path);
     fatal_ignore_sigpipe();
 
@@ -94,20 +94,20 @@ main(int argc, char *argv[])
 #endif
     }
 
-    retval = unixctl_server_create(unixctl_path, &unixctl);
+    retval = unixctl_server_create(unixctl_path, &unixctl);  //创建一个unixctl_server(存放在unixctl)，并监听在unixctl_path指定的punix路径，该路径作为ovs-appctl发送命令给ovsd的通道
     if (retval) {
         exit(EXIT_FAILURE);
     }
     unixctl_command_register("exit", "[--cleanup]", 0, 1,
-                             ovs_vswitchd_exit, &exit_args);
+                             ovs_vswitchd_exit, &exit_args);  //注册unixctl命令
 
-    bridge_init(remote);
+    bridge_init(remote);  //从 unix:%s/db.sock 数据库获取配置信息，并初始化bridge
     free(remote);
 
     exiting = false;
     cleanup = false;
     while (!exiting) {
-        memory_run();
+        memory_run();  //运行内存监视器，客户端调用memory_should_report()
         if (memory_should_report()) {
             struct simap usage;
 
