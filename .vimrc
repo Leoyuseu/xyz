@@ -1,0 +1,14 @@
+:set nu
+:set wrap
+:set hlsearch
+:set ruler
+:syntax on
+:set shiftwidth=4
+:set softtabstop=4
+:set tabstop=4
+:set expandtab
+:set autoindent
+:filetype on
+:set encoding=utf-8
+set cursorline
+set mouse=a
